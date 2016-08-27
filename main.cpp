@@ -133,7 +133,7 @@ int main( int argc, char **argv)
 		return -1;
 	}
 
-	// replace UNICODE letters -ü, ö, ç, Ü, Ö, Ç, '-
+	// replace UNICODE letters -ü, ö, ç, Ü, Ö, Ç, ', nonbreak space-
 	size_t current = buffer.find( "&#");
 	while(  current != string::npos)
 	{
@@ -145,6 +145,9 @@ int main( int argc, char **argv)
 		{
 		case 39:	// &#39;
 			buffer.replace( current, 5, "'");
+			break;
+		case 160:	// &#160;
+			buffer.replace( current, 6, " ");
 			break;
 		case 199:	// &#199;
 			buffer.replace( current, 6, "Ç");
@@ -165,8 +168,8 @@ int main( int argc, char **argv)
 			buffer.replace( current, 6, "ü");
 			break;
 		default:
-			cerr << "Encountered with a different UNICODE character:" << unicodeNumber << endl;
-			return -1;
+			cerr << "WARNING - Encountered with an unknown UNICODE character:" << unicodeNumber << endl;
+			break;
 		}
 		current = buffer.find( "&#", current + 1);
 	}
