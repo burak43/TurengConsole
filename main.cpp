@@ -80,6 +80,18 @@ static size_t write_to_mem_callback( void *contents, size_t size, size_t nmemb, 
 	return actualSize;
 }
 
+std::string replaceAll(std::string str, const std::string& from, const std::string& to)
+{
+	size_t start_pos = 0;
+	while((start_pos = str.find(from, start_pos)) != std::string::npos)
+	{
+		str.replace(start_pos, from.length(), to);
+		start_pos += to.length();
+	}
+	return str;
+}
+
+
 int main( int argc, char **argv)
 {
 	if( argc < 2)
@@ -108,7 +120,10 @@ int main( int argc, char **argv)
 
 	string buffer;
 	string url = "http://tureng.com/tr/turkce-ingilizce/";
-	url.append( argv[1]);
+
+	// replace spaces as "%20" which means space in HTML
+	url.append( replaceAll( argv[1], " ", "%20"));
+
 	const char *URL = url.c_str();
 
 	curl_easy_setopt( curl, CURLOPT_URL, URL);
